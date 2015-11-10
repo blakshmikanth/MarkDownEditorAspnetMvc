@@ -1,0 +1,205 @@
+﻿@model MarkDownMvcEditor.Models.DefaultModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="">
+    @*<h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
+</div>
+
+<div class="">
+    <div class="">
+        @*<h2>Getting started</h2>*@
+@*@using (Html.BeginForm())*@
+        @using (Ajax.BeginForm("Index", "Home", null, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "status-message" }))
+        {
+            if (ViewBag.HasErrors ?? false)
+            {
+                <div style="position:absolute;z-index: 100;width:400px;top: 100px;left: 80px;" class="alert alert-danger" id="errors">
+                    <span class="btn" onclick="$('#errors').hide()" style="float:right">Close</span>
+                    @Html.ValidationSummary("Was unable to save the post for the following reasons:")
+                </div>
+            }
+
+            <div style="width:100%;background: #333;padding: 6px;color: #fff;">
+                <span class="btn btn-default" onclick="$('#markdownhelp').show()" style="margin-right: 10px; float: right; margin-top: 5px;">Markdown Help</span>
+                <!-- change to match where you want cancel to go to -->
+                @*<a href="@Url.Action("Edit", new { page = Model.PageUrl })" class="btn btn-info" style="margin-right: 10px; float: right; margin-top: 5px;">Close</a>*@
+                <input type="submit" class="btn btn-success" style="margin-right: 10px; float: right; margin-top: 5px;" value="Save" />
+                <h1 style="margin-left: 16px;margin-top: 10px;">
+                    Markdown Editor
+                    <!-- set ViewBag.Saved in the POST controller method to show the success message on post back when not using ajax -->
+                    @if (ViewBag.Saved ?? false)
+                    {
+                        <span class="alert alert-success" style="display: inline-block; margin: 0; padding: 0;">Saved!</span>
+                    }
+                </h1>
+                <span class="alert alert-success" style="margin: 0 auto; position: relative; padding: 10px; top: -23px; left: 32%;" id="status-message">Press Ctrl + S To Save</span>
+            </div>
+
+            <!-- Mark Down Editor setup -->
+            <div class="mdd_toolbar"></div>
+            @Html.TextAreaFor(model => model.PostMarkdown, new { @class = "mdd_editor", @style = "height:200px" });
+            <div class="mdd_resizer"></div>
+            @*<p><input type="submit" value="Save" /></p>*@
+            <div class="mdd_preview" style="display:none" id="previewdiv">
+                @if (ViewBag.Content != null)
+                {
+                    <span>@ViewBag.Content</span>
+                }
+            </div>
+
+            <div id="markdownhelp" style="position: absolute;top: 65px;right: 0px;padding: 20px;border: 1px solid rgb(51, 51, 51);border-radius: 6px;background-color: rgb(255, 255, 255);display: none;">
+                <span class="btn btn-default" onclick="$('#markdownhelp').hide()" style="float: right; margin-bottom: 14px;">Close</span>
+                <section class="markdown-help-container">
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Result</th>
+                                <th>Markdown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Bold</strong></td>
+                                <td>**text**</td>
+                            </tr>
+                            <tr>
+                                <td><em>Emphasize</em></td>
+                                <td>*text*</td>
+                            </tr>
+                            <tr>
+                                <td><code>Inline Code</code></td>
+                                <td>`code`</td>
+                            </tr>
+                            <tr>
+                                <td><code>MultiLine Code</code></td>
+                                <td>
+                                    ```
+                                    code
+                                    ```
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Strike-through</td>
+                                <td>~~text~~</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">Link</a></td>
+                                <td>[title](http://)</td>
+                            </tr>
+                            <tr>
+                                <td>Image</td>
+                                <td>![alt](http://)</td>
+                            </tr>
+                            <tr>
+                                <td>List</td>
+                                <td>* item</td>
+                            </tr>
+                            <tr>
+                                <td>Blockquote</td>
+                                <td>&gt; quote</td>
+                            </tr>
+                            <tr>
+                                <td>H1</td>
+                                <td># Heading</td>
+                            </tr>
+                            <tr>
+                                <td>H2</td>
+                                <td>## Heading</td>
+                            </tr>
+                            <tr>
+                                <td>H3</td>
+                                <td>### Heading</td>
+                            </tr>
+                            <tr>
+                                <td>H4</td>
+                                <td>#### Heading</td>
+                            </tr>
+                            <tr>
+                                <td>H5</td>
+                                <td>##### Heading</td>
+                            </tr>
+                            <tr>
+                                <td>H6</td>
+                                <td>###### Heading</td>
+                            </tr>
+                            <tr>
+                                <td>Table</td>
+                                <td>
+                                    | Header 1 | Header 2 |<br />
+                                    | ------------- |:-------------|<br />
+                                    | Data 1 | Data 2 |
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    For further Markdown syntax reference: <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown Documentation</a>
+                </section>
+            </div>
+        }
+        <p>
+            <!-- Add includes for jQuery, highlight.js, and the pagedown markdown JavaScript here -->
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/vs.min.css">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+
+            <script>
+                function selectCategory() {
+                    var code = $('#previewdiv').find("code");
+
+                    // Don't apply if it's empty
+                    if (code.text() == "")
+                        return;
+
+                    if (!code.hasClass('hljs')) {
+                        hljs.highlightBlock(code.get(0));
+                    }
+                }
+
+                setTimeout(selectCategory, 1000);
+
+                $(function () {
+                    $("textarea.mdd_editor").MarkdownDeep({
+                        help_location:"/Content/mdd_help.htm",
+                        ExtraMode: true,
+                        SafeMode: true,
+
+                    });
+
+                    $("textarea.mdd_editor").focusout(function () {
+                        selectCategory();
+                    });
+
+                    $('#previewdiv').show();
+                })
+
+
+                // Initiate the code highlighter
+                hljs.initHighlightingOnLoad();
+
+                var loaded = false;
+
+                $(document).ready(function () {
+                    // on ctrl + s perform form submit
+                    $(window).keydown(function (event) {
+                        loaded = true;
+                        selectCategory();
+
+                        if (event.ctrlKey && event.keyCode == 83) {
+                            $("#status-message").html("<span style='color:#f60'>Saving...</span>");
+                            $("form").submit();
+                            event.preventDefault();
+                            return false;
+                        }
+                    });
+                });
+            </script>
+
+        </p>
+
+    </div>
+
+</div>
