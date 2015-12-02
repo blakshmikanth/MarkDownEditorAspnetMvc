@@ -5,3 +5,5 @@ See it live in action http://mdeditormvc.azurewebsites.net/
 
 Screenshot -
 ![alt](http://i.stack.imgur.com/7okV5.png)
+
+_(Powered by [Markdowndeep](http://www.toptensoftware.com/markdowndeep/) opesource library)_
